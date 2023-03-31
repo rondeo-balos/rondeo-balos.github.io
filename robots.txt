@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://rondeo-balos.github.io/sitemap.xml
