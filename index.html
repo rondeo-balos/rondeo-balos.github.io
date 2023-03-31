@@ -22,24 +22,25 @@
 		</script>
 
 		<script>
-			function changeMetaDescription( title, description ) {
+			function changeMetaDescription( title, description, hash ) {
 				document.querySelector( 'title' ).innerHTML = document.querySelector( 'title' ).innerHTML + " - " + title;
 				document.querySelector( 'meta[name="description"]' ).setAttribute( 'content', description );
+				document.querySelector( 'link[rel="canonical"]' ).setAttribute( 'href', document.querySelector( 'link[rel="canonical"]' ).getAttribute( 'href' ) + hash );
 			}
 
 			if( window.location.hash ) {
 				switch( window.location.hash ) {
 					case "#intro":
-						changeMetaDescription( 'Intro', 'I am someone who is willing to try new things. I am interested in any type of working environment, and I believe that my passion will lead to my success.' );
+						changeMetaDescription( 'Intro', 'I am someone who is willing to try new things. I am interested in any type of working environment, and I believe that my passion will lead to my success.', window.location.hash );
 						break;
 					case "#work":
 						// Todo: add contents later on.
 						break;
 					case "#about":
-						changeMetaDescription( 'Experiences', 'My work experiences have equipped me with the skills, knowledge, and work ethic necessary to excel in any role within the industry.' );
+						changeMetaDescription( 'Experiences', 'My work experiences have equipped me with the skills, knowledge, and work ethic necessary to excel in any role within the industry.', window.location.hash );
 						break;
 					case "#contact":
-						changeMetaDescription( 'Contact', 'Get in touch today! Whether you have a question about my services, want to collaborate on a project, or just want to say hello, I\'d love to hear from you.' )
+						changeMetaDescription( 'Contact', 'Get in touch today! Whether you have a question about my services, want to collaborate on a project, or just want to say hello, I\'d love to hear from you.', window.location.hash )
 						break;
 				}
 			}
