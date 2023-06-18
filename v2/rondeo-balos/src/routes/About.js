@@ -4,7 +4,7 @@ import { Typography, Box } from '@mui/material';
 function About( {theme} ) {
     return (
         <div>
-            <Typography variant='h4' className='heading' color='text.primary'>
+            <Typography variant='h4' component='h1' className='heading' color='text.primary'>
                 <span>About</span>
             </Typography>
             <Box className='content-body'>
