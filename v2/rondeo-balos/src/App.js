@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Grid, Typography, Container, Paper, Tabs, Tab, Divider } from '@mui/material';
+import { Grid, Typography, Container, useMediaQuery } from '@mui/material';
+import Sidebar from './components/Sidebar';
 import Contact from './routes/Contact';
-import Logo from './logo.png';
+import About from './routes/About';
+
 import './App.css';
+import background from './assets/background.jpg';
+import Work from './routes/Work';
+import Experience from './routes/Experience';
 
 function App() {
   const [activeTab, setActiveTab] = useState(0);
@@ -17,70 +22,34 @@ function App() {
       mode: 'dark'
     }
   });
+  
+  const isMobile = useMediaQuery( darkTheme.breakpoints.down( 'md' ) );
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <div style={{ backgroundColor: darkTheme.palette.background.default, height: '100vh' }} >
-        <Container>
-          <Grid container spacing={2}>
+      <div style={{ 
+        backgroundColor: `${darkTheme.palette.background.default+'44'}`, 
+        height: isMobile ? 'auto' : '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center'
+      }} >
+        <Container className='main-content' style={{ display: 'flex' }}>
+          <Grid container spacing={2} style={{ flex: 1 }}>
             <Grid item xs={12} md={3}>
-              <Paper
-                style={{
-                  borderRadius: 20,
-                  padding: 16,
-                  margin: 10,
-                }}
-              >
-                {/* Logo */}
-                <Container
-                  style={{
-                    height: 120, 
-                    width: 120, 
-                    margin: '16 auto', 
-                    marginBottom: 20,
-                    borderRadius: 100, 
-                    padding: 24,
-                    border: 'solid 1px #fff'
-                  }}
-                >
-                  <img src={Logo} alt='Logo' style={{ objectFit: 'contain', width: '100%', height: '100%' }} />
-                </Container>
-                
-                
-                {/* Name */}
-                <Typography component='span' variant='h5' style={{ marginBottom: 16, textAlign: 'center', display: 'block' }}>Rondeo Balos</Typography>
-                
-                <Divider style={{ marginBottom: 20 }} />
-
-                {/* Add your sidebar content here */}
-                <Container>
-                  <Tabs
-                    value={activeTab}
-                    onChange={handleTabChange}
-                    orientation='vertical'
-                    variant='scrollable'
-                    scrollButtons='auto'
-                    indicatorColor='primary'
-                  >
-                    <Tab label='About' />
-                    <Tab label='Work' />
-                    <Tab label='Experience' />
-                    <Tab label='Contact' />
-                  </Tabs>
-                </Container>
-              </Paper>
+              <Sidebar theme={darkTheme} activeTab={activeTab} handleTabChange={handleTabChange}/>
             </Grid>
             <Grid item xs={12} md={9}>
               <div style={{ padding: 16 }}>
                 {/* Add your main content here */}
                 {activeTab === 0 && (
-                  <Typography variant='h4' style={{ color: darkTheme.palette.text.primary }}>About</Typography>
+                  <About theme={darkTheme} />
                 )}
                 {activeTab === 1 && (
-                  <Typography variant='h4' style={{ color: darkTheme.palette.text.primary }}>Work</Typography>
+                  <Work theme={darkTheme} />
                 )}
                 {activeTab === 2 && (
-                  <Typography variant='h4' style={{ color: darkTheme.palette.text.primary }}>Experience</Typography>
+                  <Experience theme={darkTheme} />
                 )}
                 {activeTab === 3 && (
                   <Contact theme={darkTheme} />
