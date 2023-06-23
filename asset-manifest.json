@@ -1,21 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.526b9b52.css",
-    "main.js": "/static/js/main.b6d4491e.js",
+    "main.css": "/static/css/main.ac0282f8.css",
+    "main.js": "/static/js/main.398856ba.js",
     "static/js/787.37b78dec.chunk.js": "/static/js/787.37b78dec.chunk.js",
-    "static/media/background.jpg": "/static/media/background.d336a9193a5e86643ccb.jpg",
-    "static/media/siquijorprovince.com.webp": "/static/media/siquijorprovince.com.3f6a72c4fc315b337ca9.webp",
-    "static/media/andjoybandb.com.webp": "/static/media/andjoybandb.com.f3ab724483ceae034033.webp",
-    "static/media/mykhora.com.webp": "/static/media/mykhora.com.d2539717e94f3b34bdc2.webp",
-    "static/media/elnardintegratedfarm.com.webp": "/static/media/elnardintegratedfarm.com.066eee1e8a538aa9b76d.webp",
+    "static/media/background.webp": "/static/media/background.2b3cbfbf71eed881d9cd.webp",
     "static/media/logo.png": "/static/media/logo.e7bd3cd85829b7ff4dfb.png",
     "index.html": "/index.html",
-    "main.526b9b52.css.map": "/static/css/main.526b9b52.css.map",
-    "main.b6d4491e.js.map": "/static/js/main.b6d4491e.js.map",
+    "main.ac0282f8.css.map": "/static/css/main.ac0282f8.css.map",
+    "main.398856ba.js.map": "/static/js/main.398856ba.js.map",
     "787.37b78dec.chunk.js.map": "/static/js/787.37b78dec.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.526b9b52.css",
-    "static/js/main.b6d4491e.js"
+    "static/css/main.ac0282f8.css",
+    "static/js/main.398856ba.js"
   ]
 }
