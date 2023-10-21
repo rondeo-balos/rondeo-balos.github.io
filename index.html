@@ -248,11 +248,16 @@
             flex: 0 calc( 50% - 1rem );
             width: calc( 50% - 1rem );
             position: relative;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
             border: solid 1px var(--blackish);
             transition: .3s;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
             box-sizing: border-box;
+            padding: 1rem;
+        }
+        article.project > .card-project > img {
+            width: 100%;
+            border-radius: 1.5rem;
         }
         article.project > .card-project:hover {
             background: var(--navy);
@@ -337,6 +342,11 @@
                 }
             });
         }
+        jQuery( document ).ready( function($) {
+            $( 'a[href="#"]' ).click( function(e) {
+                e.preventDefault();
+            } )
+        } );
     </script>
 </head>
 <body>
@@ -393,7 +403,7 @@
                     <h1>Want to build a really cool website?</h1>
                     <h2>Rondeo Balos is here to help grow your business</h2>
                     <pre>Best of the best, not gonna lie</pre><br>
-                    <a href="#" class="button">Get Started</a>
+                    <a href="#" class="button" onclick="toggleMenu()">Get Started</a>
                 </div>
             </div>
             <div class="col">
@@ -413,7 +423,7 @@
                             <div class="swiper-slide">
                                 <div class="card text-centered">
                                     <h3 class="h1">Start using me now</h3>
-                                    <a href="#" class="button">Let's Go!</a>
+                                    <a href="#" class="button" onclick="toggleMenu()">Let's Go!</a>
                                 </div>
                             </div>
                         </div>
@@ -424,17 +434,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-full text-centered m-width">
+            <div class="col-full text-centered">
                 <h2 class="h1">Recent Projects</h2>
-                <p class="w-500">Here are some of my projects that I'm proud to be part of.</p>
+                <p class="w-500 m-width">Here are some of my projects that I'm proud to be part of.</p>
                 <article class="project">
                     <div class="card-project">
-                        <img src="" />
+                        <img src="assets/website_1.png" />
                         <h2>Project Name</h2>
                         <p>Lorem ipsum dolor sit amet</p>
                     </div>
                     <div class="card-project">
-                        <img src="" />
+                        <img src="assets/website_2.png" />
                         <h2>Project Name</h2>
                         <p>Lorem ipsum dolor sit amet</p>
                     </div>
@@ -482,7 +492,7 @@
                         </div>
                     </div>
                 </article>
-                <a href="#" class="button">Contact Me Now</a>
+                <a href="#" class="button" onclick="toggleMenu()">Contact Me Now</a>
             </div>
         </div>
     </div>
