@@ -311,6 +311,11 @@ article.project > .card-project:hover {
 .button:focus {
     border-radius: 10px;
 }
+.rounded {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+}
 .text-centered {
     text-align: center;
     box-sizing: border-box;
