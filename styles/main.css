@@ -266,7 +266,6 @@ article.project > .card-project {
 article.project > .card-project > img {
     width: 100%;
     border-radius: 1.5rem;
-    max-height: 350px;
     object-fit: cover;
     object-position: top;
 }
