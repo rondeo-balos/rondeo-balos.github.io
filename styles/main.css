@@ -10,6 +10,18 @@
     --blackish: #44474e;
     --navy: #00458f;
 }
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: var(--background);
+    border-radius: 10px;
+}
+::-webkit-scrollbar {
+	width: 6px;
+	background-color: var(--background);
+}
+::-webkit-scrollbar-thumb {
+	background-color: #666b7a;
+}
 html {
     overflow-x: hidden;
 }
@@ -39,10 +51,14 @@ body, html {
 h1,
 .h1 {
     font-size: 3rem;
+    line-height: 3rem;
+    margin: 1rem 0;
 }
 h2,
 .h2 {
     font-size: 1.5rem;
+    line-height: 1.5rem;
+    margin: .5rem 0;
 }
 p {
     font-size: 1.2rem;
@@ -223,7 +239,7 @@ p {
     position: relative;
     display: flex;
     flex-direction: row;
-    margin-top: 4rem;
+    margin-top: 10rem;
 }
 .row > .col {
     flex: 0 50%;
