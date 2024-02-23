@@ -267,13 +267,22 @@ p {
     width: calc(75% - 2rem);
     position: relative;
 }
+.row > .col-33 {
+    flex: 0 calc(33% - 2rem);
+    width: calc(33% - 2rem);
+    position: relative;
+}
 @media screen and (max-width: 1024px) {
     .row {
         flex-direction: column !important;
     }
-    .row > .col {
+    .row > .col,
+    .row > .col-25,
+    .row > .col-75,
+    .row > .col-33 {
         flex: 0 100%;
         width: 100%;
+        margin-bottom: 1rem;
     }
 }
 .row > .col-full {
@@ -287,6 +296,9 @@ p {
     padding: 3rem;
     box-sizing: border-box;
     border-radius: 1rem;
+}
+.jumbo-card.bordered {
+    border: solid 1px var(--blackish);
 }
 @media screen and (max-width: 1024px) {
     .jumbo-card {
@@ -393,4 +405,19 @@ footer .row {
 footer * {
     font-size: .8rem;
     color: var(--blackish);
+}
+
+.wordpress,
+.html,
+.shopify {
+    height: 100px;
+}
+.wordpress {
+    fill: #28799e;
+}
+.html {
+    fill: #dd4b25;
+}
+.shopify {
+    fill: #5e9935;
 }
