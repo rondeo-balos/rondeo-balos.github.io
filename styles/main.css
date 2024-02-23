@@ -274,7 +274,7 @@ p {
 .jumbo-card {
     background: var(--card-background);
     width: 100%;
-    padding: 4rem;
+    padding: 3rem;
     box-sizing: border-box;
     border-radius: 1rem;
 }
@@ -319,7 +319,7 @@ p {
 }
 
 .project {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 .project img {
     width: 100%;
@@ -352,6 +352,14 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: start;
+}
+.nice:before {
+    content: "";
+    position: absolute;
+    width: 70px;
+    height: 2px;
+    background-color: var(--nice);
+    margin-top: 50%;
 }
 
 footer {
