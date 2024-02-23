@@ -1,6 +1,7 @@
 :root {
     --black: #262931;
-    --white: #f7f7f7;
+    --white: #fffc;
+    --pure-white: #f7f7f7;
     --background-top: #162a40;
     --background: #1a1b1f;
     --background-bottom: #211933;
@@ -9,6 +10,7 @@
     --btn-hover: #82acff;
     --blackish: #44474e;
     --navy: #00458f;
+    --nice: #40b8b6;
 }
 ::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -30,9 +32,9 @@ body, html {
     overflow-y: auto;
     padding: 0;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     background: var( --background );
-    font-family: Inter,-apple-system,system-ui,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-family: Open Sans, Inter,-apple-system,system-ui,Helvetica Neue,Helvetica,Arial,sans-serif;
     color: var(--white);
 }
 [scroll="no"] {
@@ -51,8 +53,13 @@ body, html {
 h1,
 .h1 {
     font-size: 3rem;
-    line-height: 3rem;
+    line-height: 3.5rem;
     margin: 1rem 0;
+    color: var(--pure-white);
+}
+h1 span,
+.h1 span {
+    color: var(--nice);
 }
 h2,
 .h2 {
@@ -62,14 +69,14 @@ h2,
 }
 p {
     font-size: 1.2rem;
-    line-height: 2rem;
+    line-height: 2.4rem;
 }
 .header {
     position: fixed;
     min-height: 65px;
     width: 100vw;
     z-index: 555;
-    background: var( --black );
+    /*background: var( --black );*/
 }
 .header.sticky-active {
 }
@@ -306,21 +313,23 @@ article.project > .card-project:hover {
 }
 .button {
     padding: 1rem 2rem;
-    background: var(--btn-background);
-    color: var(--black);
-    font-weight: bold;
-    border-radius: 100px;
+    border: solid 1px var(--nice);
+    color: var(--white);
+    font-weight: 700;
+    border-radius: .2rem;
     transition: .4s;
     text-decoration: none;
-    margin-top: 50px;
+    margin-top: 1rem;
     display: inline-block;
     min-width: 100px;
     text-align: center;
+    letter-spacing: .2rem;
 }
 .button:hover,
 .button:active,
 .button:focus {
-    background: var(--btn-hover);
+    background: var(--nice);
+    color: var(--black);
 }
 .button:active,
 .button:focus {
@@ -334,6 +343,16 @@ article.project > .card-project:hover {
 .text-centered {
     text-align: center;
     box-sizing: border-box;
+}
+img.profile {
+    width: 15rem;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: top;
+    background-color: var(--navy);
+    box-shadow: 0px 0px 10px -5px #000;
+    margin-top: -10rem;
 }
 .m-width {
     max-width: 970px;
