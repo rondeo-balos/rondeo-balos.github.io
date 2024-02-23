@@ -69,7 +69,7 @@ h2,
 }
 p {
     font-size: 1.2rem;
-    line-height: 2.4rem;
+    line-height: 1.8rem;
 }
 .header {
     position: fixed;
@@ -245,17 +245,21 @@ p {
 .row {
     position: relative;
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     margin-top: 10rem;
 }
+.row.reversed {
+    flex-direction: row-reverse;
+}
 .row > .col {
-    flex: 0 50%;
-    width: 50%;
+    flex: 0 calc( 50% - 2rem );
+    width: calc( 50% - 2rem );
     position: relative;
 }
 @media screen and (max-width: 1024px) {
     .row {
-        flex-direction: column;
+        flex-direction: column !important;
     }
     .row > .col {
         flex: 0 100%;
@@ -267,43 +271,6 @@ p {
     width: 100%;
     position: relative;
 }
-article.project {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-article.project > .card-project {
-    flex: 0 calc( 50% - 1rem );
-    width: calc( 50% - 1rem );
-    position: relative;
-    border-radius: 1.5rem;
-    border: solid 1px var(--blackish);
-    transition: .3s;
-    margin-top: 1rem;
-    box-sizing: border-box;
-    padding: 1rem;
-    text-decoration: none;
-    color: var(--white);
-}
-article.project > .card-project > img {
-    width: 100%;
-    border-radius: 1.5rem;
-    object-fit: cover;
-    object-position: top;
-}
-article.project > .card-project:hover {
-    background: var(--navy);
-}
-@media screen and (max-width: 1024px) {
-    article.project {
-        flex-direction: column;
-    }
-    article.project > .card-project {
-        flex: 0 100%;
-        width: 100%;
-    }
-}
 .jumbo-card {
     background: var(--card-background);
     width: 100%;
@@ -311,11 +278,17 @@ article.project > .card-project:hover {
     box-sizing: border-box;
     border-radius: 1rem;
 }
+@media screen and (max-width: 1024px) {
+    .jumbo-card {
+        padding: 1rem;
+    }
+}
+
 .button {
     padding: 1rem 2rem;
     border: solid 1px var(--nice);
     color: var(--white);
-    font-weight: 700;
+    font-weight: 600;
     border-radius: .2rem;
     transition: .4s;
     text-decoration: none;
@@ -323,7 +296,7 @@ article.project > .card-project:hover {
     display: inline-block;
     min-width: 100px;
     text-align: center;
-    letter-spacing: .2rem;
+    letter-spacing: .1rem;
 }
 .button:hover,
 .button:active,
@@ -344,16 +317,28 @@ article.project > .card-project:hover {
     text-align: center;
     box-sizing: border-box;
 }
-img.profile {
-    width: 15rem;
-    aspect-ratio: 1;
-    border-radius: 100%;
+
+.project {
+    margin-top: 4rem;
+}
+.project img {
+    width: 100%;
+    aspect-ratio: 1.6;
+    border-radius: 1rem;
     object-fit: cover;
     object-position: top;
-    background-color: var(--navy);
-    box-shadow: 0px 0px 10px -5px #000;
-    margin-top: -10rem;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
+.project img:hover {
+    transform: scale(1.02);
+}
+@media screen and (max-width: 1024px) {
+    .project img {
+        margin-bottom: 2rem;
+    }
+}
+
 .m-width {
     max-width: 970px;
     margin-left: auto;
@@ -361,6 +346,12 @@ img.profile {
 }
 .w-500 {
     font-weight: 500;
+}
+.v-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
 }
 
 footer {
