@@ -353,13 +353,17 @@ p {
     justify-content: center;
     align-items: start;
 }
+.nice {
+    position: relative;
+}
 .nice:before {
     content: "";
     position: absolute;
+    top: 50%;
+    left: -100px;
     width: 70px;
     height: 2px;
     background-color: var(--nice);
-    margin-top: 50%;
 }
 
 footer {
