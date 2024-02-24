@@ -200,7 +200,9 @@
                         <a href="https://github.com/rondeo-balos/pos/" target="_blank" class="button">View Code</a>
                     </div>
                 </div>
-
+                <div class="text-centered">
+                    <a href="#" class="button loadMore">Load More</a>
+                </div>
             </div>
         </div>
 
@@ -250,5 +252,24 @@
             </div>
         </div>
     </footer>
+
+    <!-- Load More -->
+    <script>
+        jQuery( document ).ready( function($) {
+            $('.project').hide();
+
+            x=5;
+            step = 5;
+            $('.project').slice(0, x).show();
+            $('.loadMore').on('click', function (e) {
+                e.preventDefault();
+                x = x+step;
+                $('.project').slice(0, x).slideDown();
+
+                if(x > $('.project').length)
+                    $('.loadMore').hide();
+            });
+        });
+    </script>
 </body>
 </html>
