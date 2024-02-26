@@ -17,42 +17,10 @@
     <meta name="theme-color" content="#1a1b1f" />
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="scripts/jquery.observe.js"></script>
     <link rel="stylesheet" href="styles/main.css" />
-    <script>
-        let toggleMenu = function( event ) {
-            jQuery( document ).ready(function($) {
-                var $mobile_menu = $( '.header .mobile-menu' );
-                $mobile_menu.toggleClass( 'transformed' );
-                if( $mobile_menu.hasClass( 'transformed' ) ) {
-                    $( '.main-page' ).addClass( 'transformed' );
-                    $( 'body, html' ).attr( 'scroll', 'no' );
-                } else {
-                    $( '.main-page' ).removeClass( 'transformed' );
-                    $( 'body, html' ).attr( 'scroll', '' );
-                }
-            });
-        }
-        jQuery( document ).ready( function($) {
-            $( 'a.toggleMenu' ).click( function(e) {
-                e.preventDefault();
-                setTimeout( function() { toggleMenu(e) }, 400 );
-            } );
-            $( '.backdrop-overlay' ).click( function(e) {
-                toggleMenu();
-            } );
-            $( window ).scroll( function(e) {
-                if( jQuery(window).scrollTop() > 0 ) {
-                    // do the anim
-                    if( !$( '.header' ).hasClass( 'sticky-active' ) )
-                        $( '.header' ).addClass( 'sticky-active' );
-                } else {
-                    // reverse
-                    if( $( '.header' ).hasClass( 'sticky-active' ) )
-                        $( '.header' ).removeClass( 'sticky-active' );
-                }
-            } );
-        } );
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="scripts/main.js"></script>
 </head>
 <body>
     <div class="header">
@@ -106,23 +74,22 @@
                 <div>
                     <!--<img src="assets/profile.webp" class="profile">-->
                     <h1>
-                        Hello, I'm Rondeo Balos
-                        <br>
-                        <span>A Web Developer</span>
+                        <b class="animate__animated animate__fadeInUp">Hello, I'm Rondeo Balos</b>
+                        <span class="animate__animated animate__fadeInUp">A Web Developer</span>
                     </h1>
-                    <p class="m-text">
+                    <p class="m-text animate__animated animate__fadeInUp">
                         Each website project is unique with its own set of challenges. I treat each one with the same approach, respect and dedication. I believe in transparency and honesty. This underlines everything I do.
                     </p>
-                    <a href="#" class="button toggleMenu">Contact</a>
+                    <a href="# animate__animated animate__fadeInUp" class="button toggleMenu">Contact</a>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-full">
-                <h2 class="h1 nice">Recent Projects</h2>
+                <h2 class="h1 nice animate">Recent Projects</h2>
 
-                <div class="row project jumbo-card">
+                <div class="row project jumbo-card animate">
                     <div class="col">
                         <a href="https://staging.rondeocreates.com/" target="_blank">
                             <img src="assets/South-Mountain-Resort-Case-Study_-1.webp" width="100%" height="auto" alt="South Mountain Resort Project">
@@ -138,7 +105,7 @@
                     </div>
                 </div>
 
-                <div class="row reversed project jumbo-card">
+                <div class="row reversed project jumbo-card animate">
                     <div class="col">
                         <a href="https://andjoybandb.com/" target="_blank">
                             <img src="assets/AndJoy-Bed-and-Breakfast-Case-Study_.webp" width="100%" height="auto" alt="AndJoy Bread and Breakfast Project">
@@ -153,7 +120,7 @@
                     </div>
                 </div>
 
-                <div class="row project jumbo-card">
+                <div class="row project jumbo-card animate">
                     <div class="col">
                         <a href="https://shop.rondeocreates.com/" target="_blank">
                             <img src="assets/The-Secret-Shop-Case-Study_.webp" width="100%" height="auto" alt="The Secret Shop Project">
@@ -169,7 +136,7 @@
                     </div>
                 </div>
 
-                <div class="row reversed project jumbo-card">
+                <div class="row reversed project jumbo-card animate">
                     <div class="col">
                         <a href="https://evolveglobal.ph/" target="_blank">
                             <img src="assets/EVOLVE-Global-Service-Inc-Case-Study_.webp" width="100%" height="auto" alt="EVOLVE Global Services Project">
@@ -185,7 +152,7 @@
                     </div>
                 </div>
 
-                <div class="row project jumbo-card">
+                <div class="row project jumbo-card animate">
                     <div class="col">
                         <a href="https://github.com/rondeo-balos/pos/" target="_blank">
                             <img src="assets/POS-Inventory-Case-Study_.webp" width="100%" height="auto" alt="POS Inventory System">
@@ -200,7 +167,8 @@
                         <a href="https://github.com/rondeo-balos/pos/" target="_blank" class="button">View Code</a>
                     </div>
                 </div>
-                <div class="text-centered">
+                <div class="text-centered animate">
+                    <br><br>
                     <a href="#" class="button loadMore">Load More</a>
                 </div>
             </div>
@@ -208,24 +176,24 @@
 
         <div class="row">
             <div class="col-full">
-                <h2 class="h1 nice">Services</h2>
+                <h2 class="h1 nice animate">Services</h2>
 
                 <div class="row no-margin">
-                    <div class="col-33 jumbo-card bordered text-centered">
+                    <div class="col-33 jumbo-card bordered text-centered animate">
                         <svg class="wordpress" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 8C119.3 8 8 119.2 8 256c0 136.7 111.3 248 248 248s248-111.3 248-248C504 119.2 392.7 8 256 8zM33 256c0-32.3 6.9-63 19.3-90.7l106.4 291.4C84.3 420.5 33 344.2 33 256zm223 223c-21.9 0-43-3.2-63-9.1l66.9-194.4 68.5 187.8c.5 1.1 1 2.1 1.6 3.1-23.1 8.1-48 12.6-74 12.6zm30.7-327.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-21.9 0-58.7-2.8-58.7-2.8-12-.7-13.4 17.7-1.4 18.4 0 0 11.4 1.4 23.4 2.1l34.7 95.2L200.6 393l-81.2-241.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-4.2 0-9.1-.1-14.4-.3C109.6 73 178.1 33 256 33c58 0 110.9 22.2 150.6 58.5-1-.1-1.9-.2-2.9-.2-21.9 0-37.4 19.1-37.4 39.6 0 18.4 10.6 33.9 21.9 52.3 8.5 14.8 18.4 33.9 18.4 61.5 0 19.1-7.3 41.2-17 72.1l-22.2 74.3-80.7-239.6zm81.4 297.2l68.1-196.9c12.7-31.8 17-57.2 17-79.9 0-8.2-.5-15.8-1.5-22.9 17.4 31.8 27.3 68.2 27.3 107 0 82.3-44.6 154.1-110.9 192.7z"/></svg>
                         <h3 class="h2">Wordpress Websites</h3>
                         <p>
                             Flexible user and content management that can be extended and offer many customisations affordably.
                         </p>
                     </div>
-                    <div class="col-33 jumbo-card bordered text-centered">
+                    <div class="col-33 jumbo-card bordered text-centered animate" delay="200">
                         <svg class="html" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z"/></svg>
                         <h3 class="h2">Handcoded Webapp</h3>
                         <p>
                             Web application that is streamlined to suit your business processes and handle custom logic.
                         </p>
                     </div>
-                    <div class="col-33 jumbo-card bordered text-centered">
+                    <div class="col-33 jumbo-card bordered text-centered animate" delay="400">
                         <svg class="shopify" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M388.3 104.1a4.7 4.7 0 0 0 -4.4-4c-2 0-37.2-.8-37.2-.8s-21.6-20.8-29.6-28.8V503.2L442.8 472S388.7 106.5 388.3 104.1zM288.7 70.5a116.7 116.7 0 0 0 -7.2-17.6C271 32.9 255.4 22 237 22a15 15 0 0 0 -4 .4c-.4-.8-1.2-1.2-1.6-2C223.4 11.6 213 7.6 200.6 8c-24 .8-48 18-67.3 48.8-13.6 21.6-24 48.8-26.8 70.1-27.6 8.4-46.8 14.4-47.2 14.8-14 4.4-14.4 4.8-16 18-1.2 10-38 291.8-38 291.8L307.9 504V65.7a41.7 41.7 0 0 0 -4.4 .4S297.9 67.7 288.7 70.5zM233.4 87.7c-16 4.8-33.6 10.4-50.8 15.6 4.8-18.8 14.4-37.6 25.6-50 4.4-4.4 10.4-9.6 17.2-12.8C232.2 54.9 233.8 74.5 233.4 87.7zM200.6 24.4A27.5 27.5 0 0 1 215 28c-6.4 3.2-12.8 8.4-18.8 14.4-15.2 16.4-26.8 42-31.6 66.5-14.4 4.4-28.8 8.8-42 12.8C131.3 83.3 163.8 25.2 200.6 24.4zM154.2 244.6c1.6 25.6 69.3 31.2 73.3 91.7 2.8 47.6-25.2 80.1-65.7 82.5-48.8 3.2-75.7-25.6-75.7-25.6l10.4-44s26.8 20.4 48.4 18.8c14-.8 19.2-12.4 18.8-20.4-2-33.6-57.2-31.6-60.8-86.9-3.2-46.4 27.2-93.3 94.5-97.7 26-1.6 39.2 4.8 39.2 4.8L221.4 225.4s-17.2-8-37.6-6.4C154.2 221 153.8 239.8 154.2 244.6zM249.4 82.9c0-12-1.6-29.2-7.2-43.6 18.4 3.6 27.2 24 31.2 36.4Q262.6 78.7 249.4 82.9z"/></svg>
                         <h3 class="h2">Shopify Development</h3>
                         <p>
@@ -234,8 +202,9 @@
                     </div>
                 </div>
                 
-                <div class="text-centered">
+                <div class="text-centered animate">
                     <br><br>
+                    <a href="https://profile.indeed.com/p/rondeob-48vsv0v" target="_blank" class="button active">Resume</a>
                     <a href="#" class="button toggleMenu">Contact</a>
                 </div>
                 
