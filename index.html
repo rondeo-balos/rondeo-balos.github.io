@@ -92,9 +92,27 @@
 
                 <div class="row projects jumbo-card animate">
                     <div class="col">
+                        <a href="https://iprintsandgraphics.com/" target="_blank">
+                            <div class="project-container" style="background-image: url(assets/mockups/iprints_full.png); background-position: top;">
+                                <img src="assets/mockups/iprints.png" width="100%" height="auto" alt="iPrints&Graphics Multimedia Services">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col v-middle">
+                        <h3 class="h2">iPrints&Graphics Multimedia Services</h3>
+                        <p>
+                            iPrints&Graphics Multimedia Services provides top-quality products and services at competitive prices.
+                        </p>
+                        <small>Technologies: Wordpress, Elementor</small><br>
+                        <a href="https://iprintsandgraphics.com/" target="_blank" class="button">View Site</a>
+                    </div>
+                </div>
+
+                <div class="row projects jumbo-card animate">
+                    <div class="col">
                         <a href="https://staging.rondeocreates.com/" target="_blank">
-                            <div class="project-container" style="background-image: url(assets/projects/SMR_Mockup.png);">
-                                <img src="assets/projects/SMR_cover.png" width="100%" height="auto" alt="South Mountain Resort Project">
+                            <div class="project-container" style="background-image: url(assets/mockups/smr_full.png); background-position: top;">
+                                <img src="assets/mockups/smr.png" width="100%" height="auto" alt="South Mountain Resort Project">
                             </div>
                         </a>
                     </div>
@@ -108,7 +126,43 @@
                     </div>
                 </div>
 
-                <div class="row reversed project jumbo-card animate">
+                <div class="row projects jumbo-card animate">
+                    <div class="col">
+                        <a href="https://evolveglobal.ph/" target="_blank" >
+                            <div class="project-container" style="background-image: url(assets/mockups/evolve_full.png); background-position: top;">
+                                <img src="assets/mockups/evolve.png" width="100%" height="auto" alt="EVOLVE Global Services Project">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col v-middle">
+                        <h3 class="h2">EVOLVE Global Services</h3>
+                        <p>
+                            A dynamic website offering cutting-edge Financial Business Process Outsourcing (BPO) solutions. Transforming financial operations with expertise, innovation, and efficiency.
+                        </p>
+                        <small>Technologies: Wordpress, Elementor</small><br>
+                        <a href="https://evolveglobal.ph/" target="_blank" class="button">View Site</a>
+                    </div>
+                </div>
+
+                <div class="row projects jumbo-card animate">
+                    <div class="col">
+                        <a href="https://shop.rondeocreates.com/" target="_blank">
+                            <div class="project-container" style="background-image: url(assets/mockups/shop_full.png); background-position: top;">
+                                <img src="assets/mockups/shop.png" width="100%" height="auto" alt="The Secret Shop Project">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col v-middle">
+                        <h3 class="h2">The Secret Shop</h3>
+                        <p>
+                            The Secret Shop is an e-commerce platform built in Wordpress. The shop is non-existent, in fact this was just built to enhance my development skills.
+                        </p>
+                        <small>Technologies: Wordpress, Elementor, Woocommerce</small><br>
+                        <a href="https://shop.rondeocreates.com/" target="_blank" class="button">View Site</a>
+                    </div>
+                </div>
+
+                <div class="row projects jumbo-card animate">
                     <div class="col">
                         <a href="https://andjoybandb.com/" target="_blank">
                             <img src="assets/AndJoy-Bed-and-Breakfast-Case-Study_.webp" width="100%" height="auto" alt="AndJoy Bread and Breakfast Project">
@@ -123,41 +177,7 @@
                     </div>
                 </div>
 
-                <div class="row project jumbo-card animate">
-                    <div class="col">
-                        <a href="https://shop.rondeocreates.com/" target="_blank">
-                            <img src="assets/The-Secret-Shop-Case-Study_.webp" width="100%" height="auto" alt="The Secret Shop Project">
-                        </a>
-                    </div>
-                    <div class="col v-middle">
-                        <h3 class="h2">The Secret Shop</h3>
-                        <p>
-                            The Secret Shop is an e-commerce platform built in Wordpress. The shop is non-existent, in fact this was just built to enhance my development skills.
-                        </p>
-                        <small>Technologies: Wordpress, Elementor, Woocommerce</small><br>
-                        <a href="https://shop.rondeocreates.com/" target="_blank" class="button">View Site</a>
-                    </div>
-                </div>
-
-                <div class="row reversed projects jumbo-card animate">
-                    <div class="col">
-                        <a href="https://evolveglobal.ph/" target="_blank" >
-                            <div class="project-container" style="background-image: url(assets/projects/EVOLVE_Mockup.png);">
-                                <img src="assets/projects/EVOLVE_cover.png" width="100%" height="auto" alt="EVOLVE Global Services Project">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col v-middle">
-                        <h3 class="h2">EVOLVE Global Services</h3>
-                        <p>
-                            A dynamic website offering cutting-edge Financial Business Process Outsourcing (BPO) solutions. Transforming financial operations with expertise, innovation, and efficiency.
-                        </p>
-                        <small>Technologies: Wordpress, Elementor</small><br>
-                        <a href="https://evolveglobal.ph/" target="_blank" class="button">View Site</a>
-                    </div>
-                </div>
-
-                <div class="row project jumbo-card animate">
+                <div class="row projects jumbo-card animate">
                     <div class="col">
                         <a href="https://github.com/rondeo-balos/pos/" target="_blank">
                             <img src="assets/POS-Inventory-Case-Study_.webp" width="100%" height="auto" alt="POS Inventory System">
@@ -230,17 +250,17 @@
     <!-- Load More -->
     <script>
         jQuery( document ).ready( function($) {
-            $('.project').hide();
+            $('.projects').hide();
 
             x=5;
             step = 5;
-            $('.project').slice(0, x).show();
+            $('.projects').slice(0, x).show();
             $('.loadMore').on('click', function (e) {
                 e.preventDefault();
                 x = x+step;
-                $('.project').slice(0, x).slideDown();
+                $('.projects').slice(0, x).show();
 
-                if(x >= $('.project').length)
+                if(x >= $('.projects').length)
                     $('.loadMore').hide();
             });
         });
