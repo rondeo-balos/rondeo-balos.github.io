@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Custom 360 Tour with Three.js</title>
+    <!--<script src="libs/threejs/build/three.min.js"></script>-->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.135.0/build/three.module.js"
+          }
+        }
+    </script>
+    <script src="https://zeptojs.com/zepto.min.js"></script>
+</head>
+<body>
+    <style>
+        #container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            cursor: pointer;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+        }
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+        #arrows {
+            position: fixed;
+            z-index: 100;
+            top: 50%;
+            left: 50%;
+        }
+        #arrows a{
+            position: absolute;
+            width: 100px;
+            margin-left: -50px;
+            color: #fff;
+            transition: 0.3s;
+            -webkit-filter: drop-shadow( 0px 2px 12px #000 );
+            filter: drop-shadow( 0px 2px 12px #000 );
+        }
+        #arrows a:hover svg {
+            fill: rgb(116, 169, 229);
+        }
+    </style>
+    <div id="container"></div>
+    
+    <script type="module">
+        import * as THREE from 'three';
+        "use strict";
+        var camera,
+            scene,
+            element = document.getElementById('container'),
+            renderer,
+            onPointerDownPointerX,
+            onPointerDownPointerY,
+            onPointerDownLon,
+            onPointerDownLat,
+            fov = 70,
+            isUserInteracting = false,
+            lon = 0,
+            lat = 0,
+            phi = 0,
+            theta = 0,
+            width = 1440,
+            height = 650,
+            ratio = width / height;
+
+        var images = {
+            pano_1: {
+                image: 'images/pano_1.jpg',
+                links: [
+                    {
+                        id: 'pano_2',
+                        heading: 0
+                    }
+                ]
+            },
+            pano_2: {
+                image: 'images/pano_2.jpg',
+                links: [
+                    {
+                        id: 'pano_1',
+                        heading: 180
+                    },
+                    {
+                        id: 'pano_3',
+                        heading: 0
+                    }
+                ]
+            },
+            pano_3: {
+                image: 'images/pano_3.jpg',
+                links: [
+                    {
+                        id: 'pano_2',
+                        heading: 180
+                    },
+                    {
+                        id: 'pano_4',
+                        heading: 0
+                    }
+                ]
+            },
+            pano_4: {
+                image: 'images/pano_4.jpg',
+                links: [
+                    {
+                        id: 'pano_3',
+                        heading: 180
+                    },
+                    {
+                        id: 'pano_5',
+                        heading: 0
+                    }
+                ]
+            },
+            pano_5: {
+                image: 'images/pano_5.jpg',
+                links: [
+                    {
+                        id: 'pano_4',
+                        heading: 180
+                    }
+                ]
+            }
+        };
+
+        var currentImageId = 'pano_1';
+        var texture;
+
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        var arrowGroup = new THREE.Group();
+
+        function createArrow(heading, id) {
+            // Define the shape of the chevron
+            var shape = new THREE.Shape();
+
+            // Start at the top-left corner
+            shape.moveTo(0, 6);
+
+            // Create the chevron shape
+            shape.lineTo(-6, 5);
+            shape.lineTo(-10, 5);
+            shape.lineTo(0, 15);
+            shape.lineTo(10, 5);
+            shape.lineTo(6, 5);
+
+            // Close the shape
+            shape.closePath();
+
+            // Define the geometry by extruding the shape
+            var extrudeSettings = {
+                steps: 1,
+                depth: 1,
+                bevelEnabled: false,
+            };
+
+            var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geometry.rotateX(Math.PI / 2);
+            geometry.rotateY(-(Math.PI / 2));
+
+            const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            var arrow = new THREE.Mesh(geometry, material);
+            arrow.position.y = -30;
+            arrow.userData.id = id; // Store the ID for click events
+
+            // Calculate rotation based on heading
+            var radians = THREE.MathUtils.degToRad(heading);
+            arrow.rotation.y = radians;
+
+            arrowGroup.add(arrow);
+        }
+
+        function createLinks() {
+            arrowGroup.clear();
+            
+            var links = images[currentImageId].links;
+            links.forEach(link => {
+                var heading = link.heading;
+                var id = link.id;
+                createArrow( heading, id );
+            });
+        }
+
+        function onWindowResized(event) {
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        }
+
+        function onDocumentMouseDown(event) {
+            event.preventDefault();
+            onPointerDownPointerX = event.clientX;
+            onPointerDownPointerY = event.clientY;
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+            isUserInteracting = true;
+            element.addEventListener('mousemove', onDocumentMouseMove, false);
+            element.addEventListener('mouseup', onDocumentMouseUp, false);
+
+            // Calculate mouse position
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Update the raycaster with the mouse coordinates
+            raycaster.setFromCamera(mouse, camera);
+
+            // Check for intersections
+            var intersects = raycaster.intersectObjects(scene.children, true);
+
+            if (intersects.length > 0) {
+                // Check if the intersected object has userData (ID for click events)
+                if (intersects[0].object.userData && intersects[0].object.userData.id) {
+                    var id = intersects[0].object.userData.id;
+                    changePanorama(id);
+                    currentImageId = id;
+                    createLinks();
+                }
+            }
+        }
+
+        function onDocumentMouseMove(event) {
+            lon = (event.clientX - onPointerDownPointerX) * -0.175 + onPointerDownLon;
+            lat = (event.clientY - onPointerDownPointerY) * -0.175 + onPointerDownLat;
+        }
+
+        function onDocumentMouseUp(event) {
+            isUserInteracting = false;
+            element.removeEventListener('mousemove', onDocumentMouseMove, false);
+            element.removeEventListener('mouseup', onDocumentMouseUp, false);
+        }
+
+        function onDocumentMouseWheel(event) {
+            if (event.wheelDeltaY) {
+                fov -= event.wheelDeltaY * 0.05;
+            } else if (event.wheelDelta) {
+                fov -= event.wheelDelta * 0.05;
+            } else if (event.detail) {
+                fov += event.detail * 1.0;
+            }
+            if (fov < 45 || fov > 90) {
+                fov = (fov < 45) ? 45 : 90;
+            }
+            //camera.projectionMatrix.makePerspective(fov, ratio, 1, 1100);
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+        }
+
+        function loadTexture(imagePath, callback) {
+            var loader = new THREE.TextureLoader();
+            loader.load(imagePath, function(texture) {
+                callback(texture);
+            });
+        }
+
+        function init() {
+            camera = new THREE.PerspectiveCamera(fov, ratio, 1, 1000);
+            scene = new THREE.Scene();
+            scene.add( arrowGroup );
+
+            texture = loadTexture(images[currentImageId].image, function(texture) {
+                var mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide }));
+                mesh.scale.x = -1;
+                scene.add(mesh);
+                //render();
+            });
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            element.appendChild(renderer.domElement);
+            element.addEventListener('mousedown', onDocumentMouseDown, false);
+            element.addEventListener('mousewheel', onDocumentMouseWheel, false);
+            element.addEventListener('DOMMouseScroll', onDocumentMouseWheel, false);
+            window.addEventListener('resize', onWindowResized, false);
+            onWindowResized(null);
+
+            createLinks();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        function render() {
+            lat = Math.max(-85, Math.min(85, lat));
+            phi = THREE.MathUtils.degToRad(90 - lat);
+            theta = THREE.MathUtils.degToRad(lon);
+            camera.position.x = 100 * Math.sin(phi) * Math.cos(theta);
+            camera.position.y = 100 * Math.cos(phi);
+            camera.position.z = 100 * Math.sin(phi) * Math.sin(theta);
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+
+        function changePanorama( id ) {
+            loadTexture(images[id].image, function(newTexture) {
+                scene.children[1].material.map = newTexture;
+                scene.children[1].material.needsUpdate = true;
+            });
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
