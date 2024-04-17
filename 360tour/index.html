@@ -5,13 +5,7 @@
     <meta charset="UTF-8">
     <title>Custom 360 Tour with Three.js</title>
     <!--<script src="libs/threejs/build/three.min.js"></script>-->
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.135.0/build/three.module.js"
-          }
-        }
-    </script>
+    
     <script src="https://zeptojs.com/zepto.min.js"></script>
 </head>
 <body>
@@ -29,29 +23,12 @@
             padding: 0;
             margin: 0;
         }
-        #arrows {
-            position: fixed;
-            z-index: 100;
-            top: 50%;
-            left: 50%;
-        }
-        #arrows a{
-            position: absolute;
-            width: 100px;
-            margin-left: -50px;
-            color: #fff;
-            transition: 0.3s;
-            -webkit-filter: drop-shadow( 0px 2px 12px #000 );
-            filter: drop-shadow( 0px 2px 12px #000 );
-        }
-        #arrows a:hover svg {
-            fill: rgb(116, 169, 229);
-        }
     </style>
     <div id="container"></div>
     
     <script type="module">
-        import * as THREE from 'three';
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.135.0/build/three.module.js';
+
         "use strict";
         var camera,
             scene,
@@ -112,11 +89,11 @@
                 links: [
                     {
                         id: 'pano_3',
-                        heading: 180
+                        heading: 160
                     },
                     {
                         id: 'pano_5',
-                        heading: 0
+                        heading: -20
                     }
                 ]
             },
@@ -143,14 +120,14 @@
             var shape = new THREE.Shape();
 
             // Start at the top-left corner
-            shape.moveTo(0, 6);
+            shape.moveTo(0, 10);
 
             // Create the chevron shape
-            shape.lineTo(-6, 5);
-            shape.lineTo(-10, 5);
-            shape.lineTo(0, 15);
-            shape.lineTo(10, 5);
-            shape.lineTo(6, 5);
+            shape.lineTo(-6, 8);
+            shape.lineTo(-10, 8);
+            shape.lineTo(0, 20);
+            shape.lineTo(10, 8);
+            shape.lineTo(6, 8);
 
             // Close the shape
             shape.closePath();
@@ -168,13 +145,25 @@
 
             const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
             var arrow = new THREE.Mesh(geometry, material);
-            arrow.position.y = -30;
+            arrow.position.y = -40;
             arrow.userData.id = id; // Store the ID for click events
+            arrow.userData.originalColor = 0xffffff;
 
             // Calculate rotation based on heading
             var radians = THREE.MathUtils.degToRad(heading);
             arrow.rotation.y = radians;
 
+            // Create an outline material
+            var outlineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+            // Create edges geometry for the arrow
+            var edges = new THREE.EdgesGeometry(geometry);
+            var outline = new THREE.LineSegments(edges, outlineMaterial);
+            outline.position.copy(arrow.position); // Set position
+            outline.rotation.copy(arrow.rotation); // Set rotation
+            outline.scale.multiplyScalar(1.01); // Scale slightly larger
+            outline.userData.originalColor = 0x000000;
+
+            arrowGroup.add(outline); // Add outline to group
             arrowGroup.add(arrow);
         }
 
@@ -226,9 +215,47 @@
             }
         }
 
+        var previouslyIntersectedObject = [];
+        function checkIntersections(event) {
+            // Calculate mouse position
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Update the raycaster with the mouse coordinates
+            raycaster.setFromCamera(mouse, camera);
+
+            // Check for intersections
+            var intersects = raycaster.intersectObjects(scene.children, true);
+
+            // Reset color of all previously intersected objects
+            if (previouslyIntersectedObject !== null) {
+                previouslyIntersectedObject.forEach(object => {
+                    object.material.color.set(object.userData.originalColor); // Set color to white
+                });
+                previouslyIntersectedObject = null;
+            }
+
+            if (intersects.length > 0) {
+                // Check if the intersected object has userData (ID for click events)
+                if (intersects[0].object.userData && intersects[0].object.userData.id) {
+                    // Change color of the intersected object
+                    intersects[0].object.material.color.set(0xe5e5e5); // Set color to red
+                    
+                    // Store the intersected object for resetting later
+                    previouslyIntersectedObject = intersects.map(intersect => intersect.object);
+                }
+            }
+        }
+
         function onDocumentMouseMove(event) {
             lon = (event.clientX - onPointerDownPointerX) * -0.175 + onPointerDownLon;
             lat = (event.clientY - onPointerDownPointerY) * -0.175 + onPointerDownLat;
+
+            if( lat < 10 ) {
+                arrowGroup.position.y = ((lat-10)*2);
+            } else {
+                arrowGroup.position.y = 0;
+            }
         }
 
         function onDocumentMouseUp(event) {
@@ -260,30 +287,36 @@
             });
         }
 
+        var composer;
         function init() {
             camera = new THREE.PerspectiveCamera(fov, ratio, 1, 1000);
             scene = new THREE.Scene();
             scene.add( arrowGroup );
-
+            
             texture = loadTexture(images[currentImageId].image, function(texture) {
                 var mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide }));
                 mesh.scale.x = -1;
                 scene.add(mesh);
+                //texture.mapping = THREE.EquirectangularReflectionMapping;
+                //scene.background = texture;
                 //render();
             });
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(width, height);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional
             element.appendChild(renderer.domElement);
             element.addEventListener('mousedown', onDocumentMouseDown, false);
             element.addEventListener('mousewheel', onDocumentMouseWheel, false);
             element.addEventListener('DOMMouseScroll', onDocumentMouseWheel, false);
+            document.addEventListener( 'mousemove', checkIntersections, false );
             window.addEventListener('resize', onWindowResized, false);
             onWindowResized(null);
 
             createLinks();
         }
-
+        
         function animate() {
             requestAnimationFrame(animate);
             render();
@@ -304,6 +337,8 @@
             loadTexture(images[id].image, function(newTexture) {
                 scene.children[1].material.map = newTexture;
                 scene.children[1].material.needsUpdate = true;
+                //newTexture.mapping = THREE.EquirectangularReflectionMapping;
+                //scene.background = newTexture;
             });
         }
 
