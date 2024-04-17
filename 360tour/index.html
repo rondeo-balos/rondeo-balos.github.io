@@ -171,7 +171,6 @@
         }
 
         function createLinks() {
-            
             var links = images[currentImageId].links;
             links.forEach(link => {
                 var heading = link.heading;
@@ -387,7 +386,7 @@
 
         function changePanorama( id ) {
             if (tweenTransition !== null) {
-                //tweenTransition.stop();
+                tweenTransition.stop();
             }
             outlineGroup.clear();
             arrowGroup.clear();
@@ -403,7 +402,7 @@
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
-                    .to({ value: 1.0 }, 1000) // Transition time in milliseconds
+                    .to({ value: 1.0 }, 500) // Transition time in milliseconds
                     .onUpdate(function () {
                         transitionMaterial.uniforms.progress.value = progress.value;
                     })
