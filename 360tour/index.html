@@ -136,6 +136,7 @@
 
         var currentImageId = 'pano_1';
         var place = "Random Place";
+        var logo = 'images/logo.png';
         var texture;
 
         var raycaster = new THREE.Raycaster();
@@ -148,14 +149,14 @@
             var shape = new THREE.Shape();
 
             // Start at the top-left corner
-            shape.moveTo(0, 15);
+            shape.moveTo(0, 20);
 
             // Create the chevron shape
-            shape.lineTo(-6, 13);
-            shape.lineTo(-10, 13);
-            shape.lineTo(0, 25);
-            shape.lineTo(10, 13);
-            shape.lineTo(6, 13);
+            //shape.lineTo(-6, 13);
+            shape.lineTo(-13, 13);
+            shape.lineTo(0, 40);
+            shape.lineTo(13, 13);
+            //shape.lineTo(6, 13);
 
             // Close the shape
             shape.closePath();
@@ -341,7 +342,7 @@
 
                 // Calculate the displacement based on the camera position
                 vec3 viewDirection = normalize(position - morphCameraPosition);
-                vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 50.0; // Adjust the factor for the desired effect
+                vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 100.0; // Adjust the factor for the desired effect
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 
@@ -420,6 +421,17 @@
 
             createLinks();
             changeUI( currentImageId );
+            createCopyright();
+        }
+
+        function createCopyright() {
+            loadTexture( logo, function(texture) {
+                var platform = new THREE.Mesh( new THREE.CircleGeometry( 150, 32 ),  new THREE.MeshBasicMaterial({map: texture })  );
+                platform.rotation.x = -(Math.PI / 2);
+                //platform.rotation.y = -(Math.PI / 2);
+                platform.position.y = -450;
+                scene.add( platform );
+            });
         }
         
         function animate() {
