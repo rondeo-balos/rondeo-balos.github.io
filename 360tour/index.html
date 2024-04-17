@@ -123,8 +123,22 @@
                 ]
             },
             pano_5: {
-                title: "Hallway",
+                title: "Bedroom",
                 image: 'images/pano_5.jpg',
+                links: [
+                    {
+                        id: 'pano_4',
+                        heading: 160
+                    },
+                    {
+                        id: 'pano_6',
+                        heading: -20
+                    }
+                ]
+            },
+            pano_6: {
+                title: "Hallway",
+                image: 'images/pano_6.jpg',
                 links: [
                     {
                         id: 'pano_4',
@@ -342,7 +356,7 @@
 
                 // Calculate the displacement based on the camera position
                 vec3 viewDirection = normalize(position - morphCameraPosition);
-                vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 100.0; // Adjust the factor for the desired effect
+                vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 200.0; // Adjust the factor for the desired effect
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 
@@ -490,7 +504,7 @@
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
-                    .to({ value: 1.0 }, 800) // Transition time in milliseconds
+                    .to({ value: 1.0 }, 1000) // Transition time in milliseconds
                     .onUpdate(function () {
                         transitionMaterial.uniforms.progress.value = progress.value;
                     })
