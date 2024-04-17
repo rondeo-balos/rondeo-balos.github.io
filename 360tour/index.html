@@ -444,7 +444,7 @@
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
-                    .to({ value: 1.0 }, 500) // Transition time in milliseconds
+                    .to({ value: 1.0 }, 800) // Transition time in milliseconds
                     .onUpdate(function () {
                         transitionMaterial.uniforms.progress.value = progress.value;
                     })
