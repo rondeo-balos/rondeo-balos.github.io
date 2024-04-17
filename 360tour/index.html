@@ -319,7 +319,7 @@
             }
         `;*/
 
-        var vertexShader = `
+var vertexShader = `
     varying vec2 vUv;
     uniform float progress;
     uniform vec3 morphCameraPosition;
@@ -420,7 +420,7 @@ var fragmentShader = `
             renderer.render(scene, camera);
         }
 
-        function changePanorama( id ) {
+        function changePanorama( id, heading = 0 ) {
                     //scene.children[2].material.map = newTexture;
                     //scene.children[2].material.needsUpdate = true;
                     //scene.background = newTexture;
@@ -437,14 +437,23 @@ var fragmentShader = `
                 });
 
             });
-            Promise.all( [currentTexture, newTexture] ).then( ([currentTex, newTex]) => {
+            Promise.all( [currentTexture, newTexture, heading] ).then( ([currentTex, newTex, head]) => {
                 
                 var cloneTexture = currentTex.clone();
                 cloneTexture.needsUpdate = true;
 
                 transitionMaterial.uniforms.texture1.value = cloneTexture;
                 transitionMaterial.uniforms.texture2.value = newTex;
-                transitionMaterial.uniforms.morphCameraPosition.value = camera.position;
+
+                // Convert the heading angle to a direction vector
+                var direction = new THREE.Vector3();
+                var radians = THREE.MathUtils.degToRad(head);
+                direction.x = Math.sin(radians);
+                direction.z = Math.cos(radians);
+                direction.normalize();
+                // Scale the direction vector to adjust the effect
+                direction.multiplyScalar(50.0);
+                transitionMaterial.uniforms.morphCameraPosition.value = direction;
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
