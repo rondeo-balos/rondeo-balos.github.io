@@ -320,43 +320,46 @@
         `;*/
 
         var vertexShader = `
-            varying vec2 vUv;
-            
-            uniform float progress;
+    varying vec2 vUv;
+    uniform float progress;
+    uniform vec3 morphCameraPosition;
 
-            void main() {
-                vUv = uv;
+    void main() {
+        vUv = uv;
 
-                // Morph the vertices based on the progress
-                vec3 newPosition = position;
-                newPosition.x += sin(progress * 3.14) * 50.0; // Adjust the factor for the desired effect
+        // Calculate the displacement based on the camera position
+        vec3 viewDirection = normalize(position - morphCameraPosition);
+        vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 50.0; // Adjust the factor for the desired effect
 
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-            }
-        `;
-        var fragmentShader = `
-            uniform sampler2D texture1;
-            uniform sampler2D texture2;
-            uniform float progress;
-            
-            varying vec2 vUv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+    }
+`;
 
-            void main() {
-                vec4 texel1 = texture2D(texture1, vUv);
-                vec4 texel2 = texture2D(texture2, vUv);
+var fragmentShader = `
+    uniform sampler2D texture1;
+    uniform sampler2D texture2;
+    uniform float progress;
+    
+    varying vec2 vUv;
 
-                // Morph the colors based on the progress
-                vec4 morphedColor = mix(texel1, texel2, smoothstep(0.0, 1.0, progress));
+    void main() {
+        vec4 texel1 = texture2D(texture1, vUv);
+        vec4 texel2 = texture2D(texture2, vUv);
 
-                gl_FragColor = morphedColor;
-            }
-        `;
+        // Morph the colors based on the progress
+        vec4 morphedColor = mix(texel1, texel2, smoothstep(0.0, 1.0, progress));
+
+        gl_FragColor = morphedColor;
+    }
+`;
+
 
         var transitionMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 texture1: { value: null },
                 texture2: { value: null },
-                progress: { value: 0.0 }
+                progress: { value: 0.0 },
+                morphCameraPosition: { value: {x: 0, y: 0, z: 0} }
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -441,6 +444,7 @@
 
                 transitionMaterial.uniforms.texture1.value = cloneTexture;
                 transitionMaterial.uniforms.texture2.value = newTex;
+                transitionMaterial.uniforms.morphCameraPosition.value = camera.position;
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
