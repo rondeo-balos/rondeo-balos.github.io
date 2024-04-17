@@ -230,7 +230,7 @@
             raycaster.setFromCamera(mouse, camera);
 
             // Check for intersections
-            var intersects = raycaster.intersectObjects(scene.children, true);
+            var intersects = raycaster.intersectObjects(arrowGroup.children, true);
 
             // Reset color of all previously intersected objects
             if (previouslyIntersectedObject !== null) {
@@ -370,7 +370,7 @@
             render();
 
             TWEEN.update();
-            checkIntersections();
+            //checkIntersections();
         }
 
         function render() {
