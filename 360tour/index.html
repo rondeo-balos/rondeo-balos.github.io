@@ -25,11 +25,13 @@
         }
     </style>
     <div id="container"></div>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/23.1.1/tween.umd.min.js" integrity="sha512-vc8qtt+T0keE5z2Iotm/3XGtKhhiR9mR5QgwwJ35IFhFG+EMxNm1KXOeBISBWcmk9g88OQqM8litiBwGFzlrhw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module">
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.135.0/build/three.module.js';
 
         "use strict";
+
+        console.log( TWEEN );
         var camera,
             scene,
             element = document.getElementById('container'),
@@ -114,6 +116,7 @@
         var raycaster = new THREE.Raycaster();
         var mouse = new THREE.Vector2();
         var arrowGroup = new THREE.Group();
+        var outlineGroup = new THREE.Group();
 
         function createArrow(heading, id) {
             // Define the shape of the chevron
@@ -143,11 +146,11 @@
             geometry.rotateX(Math.PI / 2);
             geometry.rotateY(-(Math.PI / 2));
 
-            const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const material = new THREE.MeshBasicMaterial({ color: 0xf8f8f8 });
             var arrow = new THREE.Mesh(geometry, material);
             arrow.position.y = -40;
             arrow.userData.id = id; // Store the ID for click events
-            arrow.userData.originalColor = 0xffffff;
+            arrow.userData.originalColor = 0xf8f8f8;
 
             // Calculate rotation based on heading
             var radians = THREE.MathUtils.degToRad(heading);
@@ -160,15 +163,14 @@
             var outline = new THREE.LineSegments(edges, outlineMaterial);
             outline.position.copy(arrow.position); // Set position
             outline.rotation.copy(arrow.rotation); // Set rotation
-            outline.scale.multiplyScalar(1.01); // Scale slightly larger
+            outline.scale.multiplyScalar(1); // Scale slightly larger
             outline.userData.originalColor = 0x000000;
 
-            arrowGroup.add(outline); // Add outline to group
+            outlineGroup.add(outline); // Add outline to group
             arrowGroup.add(arrow);
         }
 
         function createLinks() {
-            arrowGroup.clear();
             
             var links = images[currentImageId].links;
             links.forEach(link => {
@@ -210,16 +212,20 @@
                     var id = intersects[0].object.userData.id;
                     changePanorama(id);
                     currentImageId = id;
-                    createLinks();
                 }
             }
         }
 
         var previouslyIntersectedObject = [];
+        var clientX, clientY;
         function checkIntersections(event) {
+            if( event ) {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            }
             // Calculate mouse position
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = (clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(clientY / window.innerHeight) * 2 + 1;
 
             // Update the raycaster with the mouse coordinates
             raycaster.setFromCamera(mouse, camera);
@@ -239,7 +245,7 @@
                 // Check if the intersected object has userData (ID for click events)
                 if (intersects[0].object.userData && intersects[0].object.userData.id) {
                     // Change color of the intersected object
-                    intersects[0].object.material.color.set(0xe5e5e5); // Set color to red
+                    intersects[0].object.material.color.set(0xa5a5a5); // Set color to red
                     
                     // Store the intersected object for resetting later
                     previouslyIntersectedObject = intersects.map(intersect => intersect.object);
@@ -252,8 +258,10 @@
             lat = (event.clientY - onPointerDownPointerY) * -0.175 + onPointerDownLat;
 
             if( lat < 10 ) {
+                outlineGroup.position.y = ((lat-10)*2);
                 arrowGroup.position.y = ((lat-10)*2);
             } else {
+                outlineGroup.position.y = 0;
                 arrowGroup.position.y = 0;
             }
         }
@@ -287,20 +295,60 @@
             });
         }
 
-        var composer;
+        
+
+        var tweenTransition = null;
+        var vertexShader = `
+            varying vec2 vUv;
+
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+        var fragmentShader = `
+            uniform sampler2D texture1;
+            uniform sampler2D texture2;
+            uniform float progress;
+
+            varying vec2 vUv;
+
+            void main() {
+                vec4 texel1 = texture2D(texture1, vUv);
+                vec4 texel2 = texture2D(texture2, vUv);
+                gl_FragColor = mix(texel1, texel2, progress);
+            }
+        `;
+
+        var transitionMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                texture1: { value: null },
+                texture2: { value: null },
+                progress: { value: 0.0 }
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true,
+            side: THREE.BackSide
+        });
+
         function init() {
             camera = new THREE.PerspectiveCamera(fov, ratio, 1, 1000);
             scene = new THREE.Scene();
             scene.add( arrowGroup );
+            scene.add( outlineGroup );
             
             texture = loadTexture(images[currentImageId].image, function(texture) {
-                var mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide }));
-                mesh.scale.x = -1;
-                scene.add(mesh);
-                //texture.mapping = THREE.EquirectangularReflectionMapping;
-                //scene.background = texture;
-                //render();
+                //var mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide }));
+                //mesh.scale.x = -1;
+                //scene.add(mesh);
+                texture.mapping = THREE.EquirectangularReflectionMapping;
+                scene.background = texture;
+                transitionMaterial.uniforms.texture1.value = texture;
             });
+
+            transitionObject.scale.x = -1;
+            scene.add(transitionObject);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(width, height);
@@ -316,10 +364,14 @@
 
             createLinks();
         }
+        var transitionObject = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), transitionMaterial);
         
         function animate() {
             requestAnimationFrame(animate);
             render();
+
+            TWEEN.update();
+            checkIntersections();
         }
 
         function render() {
@@ -334,11 +386,33 @@
         }
 
         function changePanorama( id ) {
-            loadTexture(images[id].image, function(newTexture) {
-                scene.children[1].material.map = newTexture;
-                scene.children[1].material.needsUpdate = true;
-                //newTexture.mapping = THREE.EquirectangularReflectionMapping;
+            if (tweenTransition !== null) {
+                //tweenTransition.stop();
+            }
+            outlineGroup.clear();
+            arrowGroup.clear();
+            var currentTexture = scene.background;
+            var targetTexture = loadTexture(images[id].image, function(newTexture) {
+                //scene.children[2].material.map = newTexture;
+                //scene.children[2].material.needsUpdate = true;
+                newTexture.mapping = THREE.EquirectangularReflectionMapping;
                 //scene.background = newTexture;
+
+                transitionMaterial.uniforms.texture1.value = currentTexture;
+                transitionMaterial.uniforms.texture2.value = newTexture;
+
+                var progress = { value: 0.0 };
+                var tweenTransition = new TWEEN.Tween(progress)
+                    .to({ value: 1.0 }, 1000) // Transition time in milliseconds
+                    .onUpdate(function () {
+                        transitionMaterial.uniforms.progress.value = progress.value;
+                    })
+                    .onComplete(function () {
+                        scene.background = newTexture;
+                        currentTexture.dispose(); // Dispose the old texture
+                        createLinks();
+                    })
+                    .start();
             });
         }
 
