@@ -150,6 +150,7 @@
             var arrow = new THREE.Mesh(geometry, material);
             arrow.position.y = -40;
             arrow.userData.id = id; // Store the ID for click events
+            arrow.userData.heading = heading;
             arrow.userData.originalColor = 0xf8f8f8;
 
             // Calculate rotation based on heading
@@ -209,7 +210,8 @@
                 // Check if the intersected object has userData (ID for click events)
                 if (intersects[0].object.userData && intersects[0].object.userData.id) {
                     var id = intersects[0].object.userData.id;
-                    changePanorama(id);
+                    var heading = intersects[0].object.userData.heading;
+                    changePanorama(id, heading);
                     currentImageId = id;
                 }
             }
@@ -332,6 +334,12 @@ var vertexShader = `
         vec3 newPosition = position + viewDirection * sin(progress * 3.14) * 50.0; // Adjust the factor for the desired effect
 
         gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+
+        //vec3 newPosition = position;
+        //newPosition.x += sin(progress * 3.14) * morphCameraPosition.x; // Adjust the factor for the desired effect
+        //newPosition.z += cos(progress * 3.14) * morphCameraPosition.z;
+
+        //gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
     }
 `;
 
@@ -447,12 +455,14 @@ var fragmentShader = `
 
                 // Convert the heading angle to a direction vector
                 var direction = new THREE.Vector3();
-                var radians = THREE.MathUtils.degToRad(head);
+                var radians = THREE.MathUtils.degToRad(head + 90);
                 direction.x = Math.sin(radians);
                 direction.z = Math.cos(radians);
                 direction.normalize();
+                //direction.y = 0;
                 // Scale the direction vector to adjust the effect
                 direction.multiplyScalar(50.0);
+                console.log( direction );
                 transitionMaterial.uniforms.morphCameraPosition.value = direction;
 
                 var progress = { value: 0.0 };
