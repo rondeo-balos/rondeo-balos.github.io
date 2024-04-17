@@ -297,7 +297,7 @@
         
 
         var tweenTransition = null;
-        var vertexShader = `
+        /*var vertexShader = `
             varying vec2 vUv;
 
             void main() {
@@ -317,6 +317,39 @@
                 vec4 texel2 = texture2D(texture2, vUv);
                 gl_FragColor = mix(texel1, texel2, progress);
             }
+        `;*/
+
+        var vertexShader = `
+            varying vec2 vUv;
+            
+            uniform float progress;
+
+            void main() {
+                vUv = uv;
+
+                // Morph the vertices based on the progress
+                vec3 newPosition = position;
+                newPosition.x += sin(progress * 3.14) * 50.0; // Adjust the factor for the desired effect
+
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        var fragmentShader = `
+            uniform sampler2D texture1;
+            uniform sampler2D texture2;
+            uniform float progress;
+            
+            varying vec2 vUv;
+
+            void main() {
+                vec4 texel1 = texture2D(texture1, vUv);
+                vec4 texel2 = texture2D(texture2, vUv);
+
+                // Morph the colors based on the progress
+                vec4 morphedColor = mix(texel1, texel2, smoothstep(0.0, 1.0, progress));
+
+                gl_FragColor = morphedColor;
+            }
         `;
 
         var transitionMaterial = new THREE.ShaderMaterial({
@@ -330,6 +363,7 @@
             transparent: true,
             side: THREE.BackSide
         });
+        var transitionObject = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), transitionMaterial);
 
         function init() {
             camera = new THREE.PerspectiveCamera(fov, ratio, 1, 1000);
@@ -363,7 +397,6 @@
 
             createLinks();
         }
-        var transitionObject = new THREE.Mesh(new THREE.SphereGeometry(500, 60, 40), transitionMaterial);
         
         function animate() {
             requestAnimationFrame(animate);
@@ -385,20 +418,29 @@
         }
 
         function changePanorama( id ) {
+                    //scene.children[2].material.map = newTexture;
+                    //scene.children[2].material.needsUpdate = true;
+                    //scene.background = newTexture;
             if (tweenTransition !== null) {
                 tweenTransition.stop();
             }
             outlineGroup.clear();
             arrowGroup.clear();
             var currentTexture = scene.background;
-            var targetTexture = loadTexture(images[id].image, function(newTexture) {
-                //scene.children[2].material.map = newTexture;
-                //scene.children[2].material.needsUpdate = true;
-                newTexture.mapping = THREE.EquirectangularReflectionMapping;
-                //scene.background = newTexture;
+            var newTexture = new Promise( (resolve, reject) => {
+                loadTexture(images[id].image, function(newTexture) {
+                    newTexture.mapping = THREE.EquirectangularReflectionMapping;
+                    resolve( newTexture );
+                });
 
-                transitionMaterial.uniforms.texture1.value = currentTexture;
-                transitionMaterial.uniforms.texture2.value = newTexture;
+            });
+            Promise.all( [currentTexture, newTexture] ).then( ([currentTex, newTex]) => {
+                
+                var cloneTexture = currentTex.clone();
+                cloneTexture.needsUpdate = true;
+
+                transitionMaterial.uniforms.texture1.value = cloneTexture;
+                transitionMaterial.uniforms.texture2.value = newTex;
 
                 var progress = { value: 0.0 };
                 var tweenTransition = new TWEEN.Tween(progress)
@@ -407,8 +449,8 @@
                         transitionMaterial.uniforms.progress.value = progress.value;
                     })
                     .onComplete(function () {
-                        scene.background = newTexture;
-                        currentTexture.dispose(); // Dispose the old texture
+                        scene.background = newTex;
+                        currentTex.dispose(); // Dispose the old texture
                         createLinks();
                     })
                     .start();
