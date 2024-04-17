@@ -364,8 +364,10 @@
                 vec4 texel1 = texture2D(texture1, vUv);
                 vec4 texel2 = texture2D(texture2, vUv);
 
+                float smoothProgress = smoothstep(0.0, 1.0, progress);
+
                 // Morph the colors based on the progress
-                vec4 morphedColor = mix(texel1, texel2, smoothstep(0.0, 1.0, progress));
+                vec4 morphedColor = mix(texel1, texel2, smoothProgress);
 
                 gl_FragColor = morphedColor;
             }
@@ -421,11 +423,9 @@
         }
         
         function animate() {
+            TWEEN.update();
             requestAnimationFrame(animate);
             render();
-
-            TWEEN.update();
-            //checkIntersections();
         }
 
         function render() {
@@ -472,7 +472,7 @@
                 direction.normalize();
                 //direction.y = 0;
                 // Scale the direction vector to adjust the effect
-                direction.multiplyScalar(200.0);
+                direction.multiplyScalar(50.0);
                 console.log( direction );
                 transitionMaterial.uniforms.morphCameraPosition.value = direction;
 
