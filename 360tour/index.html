@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Custom 360 Tour with Three.js</title>
-    <!--<script src="libs/threejs/build/three.min.js"></script>-->
+    <title>Custom 360 Tour</title>
     
     <script src="https://zeptojs.com/zepto.min.js"></script>
 </head>
@@ -439,13 +438,15 @@
         }
 
         function createCopyright() {
-            loadTexture( logo, function(texture) {
-                var platform = new THREE.Mesh( new THREE.CircleGeometry( 150, 32 ),  new THREE.MeshBasicMaterial({map: texture })  );
-                platform.rotation.x = -(Math.PI / 2);
-                //platform.rotation.y = -(Math.PI / 2);
-                platform.position.y = -450;
-                scene.add( platform );
-            });
+            if ( logo ) {
+                loadTexture( logo, function(texture) {
+                    var platform = new THREE.Mesh( new THREE.CircleGeometry( 150, 32 ),  new THREE.MeshBasicMaterial({map: texture })  );
+                    platform.rotation.x = -(Math.PI / 2);
+                    //platform.rotation.y = -(Math.PI / 2);
+                    platform.position.y = -450;
+                    scene.add( platform );
+                });
+            }
         }
         
         function animate() {
