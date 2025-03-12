@@ -2,8 +2,18 @@
 <html lang="en">
     <head>
         <meta http-equiv="refresh" content="3; url=https://rondeobalos.com/">
+        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     </head>
-    <body>
-        <h1>Redirecting to <a href="https://rondeobalos.com/">https://rondeobalos.com/</a></h1>
+    <body class="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+        <div class="text-center">
+            <h1 class="text-2xl font-semibold">Redirecting...</h1>
+            <p class="mt-2 text-gray-400">You will be redirected shortly.</p>
+            <p class="mt-4 text-sm text-gray-500">
+                If you are not redirected, 
+                <a id="redirect-link" href="https://rondeobalos.com/" class="text-blue-400 hover:underline">
+                    click here
+                </a>.
+            </p>
+        </div>
     </body>
 </html>
